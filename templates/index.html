@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <title>Workout App</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"><h1>Workout App</h1></div>
+        <div class="col-md-4"></div>
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="effort_level">Effort Level</label>
+          <input type="number" min="1" max="10" step="any" class="form-control" name="effort_level" value="1">
+        </div>
+        <div class="form-group">
+          <label for="cadence">Cadence</label>
+          <input type="number" min="1" max="150" class="form-control" name="cadence" value="60">
+        </div>
+          <div class="form-row">
+            <div class="col">
+                <label for="minutes">Minutes</label>
+                <input type="number" min="0" name="minutes" class="form-control" value="0">
+            </div>
+            <div class="col">
+                <label for="seconds">Seconds</label>
+                <input type="number" min="0" max="60" name="seconds" class="form-control" value="0">
+            </div>
+        </div>
+        <div class="button-pad text-right">
+            <button id="add-btn" type="button" class="btn btn-outline-primary btn-lg">Add</button>
+            <button id="save-btn" type="button" class="btn btn-outline-success btn-lg">Save</button>
+            <button id="clear-btn" type="button" class="btn btn-outline-danger btn-lg">Clear</button>
+        </div>
+      </form>
+        <div id="container" style="width: 100%;">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    </div>
+  </body>
+  <script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Red"],
+            datasets: [{
+                label: 'Effort Level',
+                data: [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+                        min: 0,
+                        max: 10,
+                    }
+                }],
+                xAxes: [
+                    {
+                        categoryPercentage: 1.0,
+                        barPercentage: 1.0
+                    }
+                ]
+            }
+        }
+    });
+
+    $("#add-btn").click(function(){
+        var formattedData = reformatFormData($("form").serializeArray());
+        if (formattedData.hasOwnProperty("effort_level")) {
+            addData(myChart, "New", formattedData.effort_level);
+        };
+        return false;
+    });
+
+    function reformatFormData(serializedFormData) {
+        var resultJson = {};
+        for (var i = 0; i < serializedFormData.length; i++) {
+            resultJson[serializedFormData[i].name] = serializedFormData[i].value;
+        }
+        return resultJson;
+    }
+
+    function addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(data);
+            dataset.backgroundColor.push("rgba(255, 99, 132, 0.2)");
+            dataset.borderColor.push("rgba(255, 99, 132, 1)");
+        });
+        chart.update();
+    }
+
+    function removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart.update();
+    }
+    </script>
+</html>

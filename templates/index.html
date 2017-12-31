@@ -59,19 +59,16 @@
   <script>
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: "line",
         data: {
-            labels: ["Red"],
+            labels: [0],
             datasets: [{
-                label: 'Effort Level',
+                label: "Effort Level",
                 data: [],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                ],
-                borderWidth: 1
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255,99,132,1)",
+                borderWidth: 1,
+                steppedLine: true
             }]
         },
         options: {
@@ -86,7 +83,7 @@
                 xAxes: [
                     {
                         categoryPercentage: 1.0,
-                        barPercentage: 1.0
+                        barPercentage: 1.0,
                     }
                 ]
             }
@@ -96,7 +93,8 @@
     $("#add-btn").click(function(){
         var formattedData = reformatFormData($("form").serializeArray());
         if (formattedData.hasOwnProperty("effort_level")) {
-            addData(myChart, "New", formattedData.effort_level);
+            var labelArray = myChart.data.labels;
+            addData(myChart, labelArray[labelArray.length -1] += 1, formattedData.effort_level);
         };
         return false;
     });
@@ -113,8 +111,6 @@
         chart.data.labels.push(label);
         chart.data.datasets.forEach((dataset) => {
             dataset.data.push(data);
-            dataset.backgroundColor.push("rgba(255, 99, 132, 0.2)");
-            dataset.borderColor.push("rgba(255, 99, 132, 1)");
         });
         chart.update();
     }

@@ -10,6 +10,7 @@
 			  crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="/static/css/style.css"/>
+    <script src="/static/js/moment.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
     <title>Workout App</title>
@@ -75,17 +76,27 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero:true,
+                        beginAtZero: false,
                         min: 0,
                         max: 10,
                     }
                 }],
-                xAxes: [
-                    {
-                        categoryPercentage: 1.0,
-                        barPercentage: 1.0,
+                xAxes: [{
+                    type: 'time',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    },
+                    time: {
+                        unit: 'second',
+                        unitStepSize: 10,
+                        format: "HH:mm:ss",
+                        displayFormats: {
+                            minute: 'HH:mm',
+                            hour: 'HH:mm'
+                        }
                     }
-                ]
+                }]
             }
         }
     });
@@ -94,10 +105,22 @@
         var formattedData = reformatFormData($("form").serializeArray());
         if (formattedData.hasOwnProperty("effort_level")) {
             var labelArray = myChart.data.labels;
-            addData(myChart, labelArray[labelArray.length -1] += 1, formattedData.effort_level);
+            var timeInSeconds = timeConverter(formattedData.minutes, formattedData.seconds);
+            addData(myChart, labelArray[labelArray.length -1] += timeInSeconds, formattedData.effort_level);
         };
         return false;
     });
+
+    function timeConverter(minutes, seconds) {
+        var total = 0;
+        if (minutes > 0) {
+            total += Number(minutes) * 60;
+        }
+        if (seconds > 0) {
+            total += Number(seconds);
+        }
+        return total;
+    }
 
     function reformatFormData(serializedFormData) {
         var resultJson = {};

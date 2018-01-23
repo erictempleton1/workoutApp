@@ -58,11 +58,15 @@
     </div>
   </body>
   <script>
+    
+    // todo - seconds only are not working quite right
+
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: "line",
         data: {
-            labels: [0],
+            seconds: 0,
+            labels: ["00:00:00"],
             datasets: [{
                 label: "Effort Level",
                 data: [],
@@ -73,26 +77,30 @@
             }]
         },
         options: {
+            elements: { point: { radius: 0 } },
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero: false,
                         min: 0,
                         max: 10,
-                    }
+                    },
+                    gridLines: { display: false }
                 }],
                 xAxes: [{
+                    ticks: { display: false },
+                    gridLines: { display: false },
                     type: 'time',
                     scaleLabel: {
-                        display: true,
+                        display: false,
                         labelString: 'Time'
                     },
                     time: {
-                        unit: 'second',
-                        unitStepSize: 10,
-                        format: "HH:mm:ss",
+                        unit: "second",
+                        unitStepSize: 1,
+                        format: "HH:mm",
                         displayFormats: {
-                            minute: 'HH:mm',
+                            minute: "HH:mm",
                             hour: 'HH:mm'
                         }
                     }
@@ -104,9 +112,10 @@
     $("#add-btn").click(function(){
         var formattedData = reformatFormData($("form").serializeArray());
         if (formattedData.hasOwnProperty("effort_level")) {
-            var labelArray = myChart.data.labels;
             var timeInSeconds = timeConverter(formattedData.minutes, formattedData.seconds);
-            addData(myChart, labelArray[labelArray.length -1] += timeInSeconds, formattedData.effort_level);
+            var strDate = secondsToDate(timeInSeconds);
+            addData(myChart, strDate, formattedData.effort_level, timeInSeconds);
+            console.log(myChart.data);
         };
         return false;
     });
@@ -122,6 +131,10 @@
         return total;
     }
 
+    function secondsToDate(seconds) {
+        return moment.utc((Number(seconds) + myChart.data.seconds) * 1000).format('HH:mm:ss');
+    }
+
     function reformatFormData(serializedFormData) {
         var resultJson = {};
         for (var i = 0; i < serializedFormData.length; i++) {
@@ -130,11 +143,14 @@
         return resultJson;
     }
 
-    function addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
+    function addData(chart, label, data, seconds) {
+        if (chart.data.labels.length === 1 && chart.data.labels[0] === "00:00:00") {
+            chart.data.labels.push(label);
+        } else {
+            chart.data.labels.push(chart.data.labels[chart.data.labels.length - 1], label);
+        }
+        chart.data.datasets[0].data.push(Number(data), Number(data));
+        chart.data.seconds += seconds;
         chart.update();
     }
 

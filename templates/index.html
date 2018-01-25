@@ -76,6 +76,7 @@
         type: "line",
         data: {
             seconds: 0,
+            index: -1,
             labels: ["00:00:00"],
             datasets: [{
                 label: "Effort Level",
@@ -125,18 +126,27 @@
             var timeInSeconds = timeConverter(formattedData.minutes, formattedData.seconds);
             var strDate = secondsToDate(timeInSeconds);
             addData(myChart, strDate, formattedData.effort_level, timeInSeconds);
+
+            myChart.data.index += 1;
+            addBlockAlert(formattedData, myChart.data.index);
+
             console.log(myChart.data);
-            $("ul").append(createAlert(formattedData));
         };
         return false;
     });
 
-    function createAlert(formattedData) {
+    $("ul").mouseup(function() {
+        console.log("drag drop"); 
+    });
+
+    function addBlockAlert(formattedData, indexPos) {
         var blockText = "<strong>Effort Level</strong>: " + formattedData.effort_level + " " +
                         "<strong>Cadence</strong>: " + formattedData.cadence + " " +
                         "<strong>Minutes</strong>: " + formattedData.minutes + " " +
                         "<strong>Seconds</strong>: " + formattedData.seconds + " ";
-        return '<div class="alert alert-primary text-center" role="alert">' + blockText + '</div>';
+        var alertDiv = '<div id=' + indexPos + ' class="alert alert-primary text-center block" role="alert">' + 
+                        blockText + '</div>';
+        $("ul").append(alertDiv);
     }
 
     function timeConverter(minutes, seconds) {

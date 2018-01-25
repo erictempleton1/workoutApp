@@ -53,19 +53,7 @@
         </div>
         <div class="row alert-pad">
             <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <ul id="sortable">
-                    <div class="alert alert-primary" role="alert">
-                        Number 1
-                    </div>
-                    <div class="alert alert-primary" role="alert">
-                        Number 2
-                    </div>
-                    <div class="alert alert-primary" role="alert">
-                        Number 3
-                    </div>
-                </ul>
-            </div>
+            <div class="col-md-8"><ul id="sortable"></ul></div>
             <div class="col-md-2"></div>
         </div>
 
@@ -138,9 +126,18 @@
             var strDate = secondsToDate(timeInSeconds);
             addData(myChart, strDate, formattedData.effort_level, timeInSeconds);
             console.log(myChart.data);
+            $("ul").append(createAlert(formattedData));
         };
         return false;
     });
+
+    function createAlert(formattedData) {
+        var blockText = "<strong>Effort Level</strong>: " + formattedData.effort_level + " " +
+                        "<strong>Cadence</strong>: " + formattedData.cadence + " " +
+                        "<strong>Minutes</strong>: " + formattedData.minutes + " " +
+                        "<strong>Seconds</strong>: " + formattedData.seconds + " ";
+        return '<div class="alert alert-primary text-center" role="alert">' + blockText + '</div>';
+    }
 
     function timeConverter(minutes, seconds) {
         var total = 0;

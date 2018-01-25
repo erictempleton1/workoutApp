@@ -9,6 +9,7 @@
 			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
 			  crossorigin="anonymous">
     </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="/static/css/style.css"/>
     <script src="/static/js/moment.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
@@ -50,6 +51,23 @@
         <div id="container" style="width: 100%;">
             <canvas id="myChart"></canvas>
         </div>
+        <div class="row alert-pad">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <ul id="sortable">
+                    <div class="alert alert-primary" role="alert">
+                        Number 1
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        Number 2
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        Number 3
+                    </div>
+                </ul>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -58,6 +76,10 @@
     </div>
   </body>
   <script>
+    $(function() {
+        $( "#sortable" ).sortable();
+        $( "#sortable" ).disableSelection();
+    });
     
     // todo - seconds only are not working quite right
 

@@ -62,7 +62,14 @@
   </body>
   <script>
     $(function() {
-        $( "#sortable" ).sortable();
+        $("#sortable").sortable({
+            stop: function(event, ui) {
+                console.log(ui.item);
+                // todo - figure out how to get the div id here or do something else...?
+                console.log("New position: " + ui.item.index() + " Old position: " + ui.item.id);
+                
+            }
+        });
         $( "#sortable" ).disableSelection();
     });
     
@@ -133,7 +140,7 @@
     });
 
     $("ul").mouseup(function() {
-        console.log("drag drop"); 
+        console.log("drag drop");
     });
 
     function addBlockAlert(formattedData, indexPos) {

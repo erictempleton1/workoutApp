@@ -64,16 +64,19 @@
     $(function() {
         $("#sortable").sortable({
             stop: function(event, ui) {
-                console.log(ui.item);
-                // todo - figure out how to get the div id here or do something else...?
-                console.log("New position: " + ui.item.index() + " Old position: " + ui.item.id);
+                console.log("Old: " + ui.item.attr("id") + " New: " + ui.item.index());
                 
+                // update the id with the new position
+                ui.item.attr("id", ui.item.index());
             }
         });
         $( "#sortable" ).disableSelection();
     });
     
     // todo - seconds only are not working quite right
+    // todo - copy a block onclick
+    // todo - remove a block onclick
+    // todo - move a block on sortable stop
 
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
@@ -137,10 +140,6 @@
             console.log(myChart.data);
         };
         return false;
-    });
-
-    $("ul").mouseup(function() {
-        console.log("drag drop");
     });
 
     function addBlockAlert(formattedData, indexPos) {
